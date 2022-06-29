@@ -11,14 +11,16 @@
 #include <stdio.h>
 #include "../core/Array.h"
 #include "../core/Text.h"
+#include "Generatable.h"
 
-
-struct HeaderItem {
-	std::string key;
-	std::string value;
+struct HeaderItem : Generatable {
+	core::Text key;
+	core::Text value;
+	
+	
 };
 
-class Header {
+class Header : Generatable {
 	
 	
 	private:

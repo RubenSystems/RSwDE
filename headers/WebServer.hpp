@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 
+#include "Generatable.h"
+
 namespace RSwDE {
 	class WebServer {
 	public:
