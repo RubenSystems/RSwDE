@@ -13,18 +13,32 @@
 #include "../core/Text.h"
 #include "Generatable.h"
 
-struct HeaderItem : Generatable {
-	core::Text key;
-	core::Text value;
-	
-	
-};
+#include <string>
 
-class Header : Generatable {
-	
-	
-	private:
-		core::Array<HeaderItem> headers;
-};
+namespace rswde {
+	struct HeaderItem {
+
+		
+		core::Text key;
+		core::Text value;
+		
+
+	};
+
+	class Header : public Generatable {
+		public:
+		
+			Header () : headers(10) {
+				
+			}
+				
+			core::Text generate();
+		
+			void add(const HeaderItem &);
+		
+		private:
+			core::Array<HeaderItem> headers;
+	};
+}
 
 #endif /* Header_hpp */

@@ -10,7 +10,7 @@
 
 #include "../core/Text.h"
 
-//Abstract class to define any object that can be generated(and by extension sent over to browser.)
+// Abstract class to define any object that can be generated(and by extension sent over to browser.)
 class Generatable {
 	public:
 		virtual core::Text generate() = 0;

@@ -6,6 +6,7 @@
 //
 
 #include "../headers/WebServer.hpp"
+#include "../headers/Header.hpp"
 
 #include <netinet/in.h>
 #include <stdio.h>
@@ -14,7 +15,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-namespace RSwDE {
+
+
+namespace rswde {
 	WebServer::WebServer(int port): port(port) { }
 
 	void WebServer::start() {
@@ -23,7 +26,14 @@ namespace RSwDE {
 		int opt = 1;
 		int addrlen = sizeof(address);
 		char buffer[1024] = { 0 };
-		const char * hello = "HTTP/1.1 200 OK\nContent-Length: 6\nServer: RubenSystems RSwDE\n\nHello!\r\n";
+		
+		
+		
+		Header header;
+		header.add({"Content-Length", "6"});
+		
+		const char * hello = header.generate().c_string();
+		out(hello);
 	 
 		// Creating socket file descriptor
 		if ((server_fd = socket(AF_INET, SOCK_STREAM, 0))
