@@ -9,15 +9,17 @@
 #define WebServer_hpp
 
 #include <stdio.h>
-
+#include "../core/Text.h"
 
 namespace rswde {
 	class WebServer {
 	public:
 		
+		typedef core::Text (*Callback)(core::Text);
+		
 		WebServer(int port);
 		
-		void start();
+		void start(Callback);
 		
 		void shutdown();
 		

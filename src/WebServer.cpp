@@ -14,26 +14,22 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
+#include <future>
 
 
 namespace rswde {
 	WebServer::WebServer(int port): port(port) { }
 
-	void WebServer::start() {
-		int server_fd, new_socket, valread;
-		struct sockaddr_in address;
+	void WebServer::start(Callback completion) {
+		int server_fd, valread;
+		
 		int opt = 1;
+		struct sockaddr_in address;
 		int addrlen = sizeof(address);
 		char buffer[1024] = { 0 };
 		
 		
-		
-		Header header;
-		header.add({"Content-Length", "6"});
-		
-		const char * hello = header.generate().c_string();
-		out(hello);
+	
 	 
 		// Creating socket file descriptor
 		if ((server_fd = socket(AF_INET, SOCK_STREAM, 0))
@@ -57,30 +53,31 @@ namespace rswde {
 		address.sin_port = htons(this->port);
 	 
 		// Forcefully attaching socket to the port 8080
-		if (bind(server_fd, (struct sockaddr*)&address,
-				 sizeof(address))
-			< 0) {
+		if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
 			perror("bind failed");
 			exit(EXIT_FAILURE);
 		}
-		if (listen(server_fd, 3) < 0) {
+		if (listen(server_fd, 10) < 0) {
 			perror("listen");
 			exit(EXIT_FAILURE);
 		}
-		if ((new_socket
-			 = accept(server_fd, (struct sockaddr*)&address,
-					  (socklen_t*)&addrlen))
-			< 0) {
-			perror("accept");
-			exit(EXIT_FAILURE);
+		while (true) {
+			int new_socket;
+			if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
+				perror("accept");
+				exit(EXIT_FAILURE);
+			}
+			valread = (int)read(new_socket, buffer, 1024);
+			const auto future = std::async(std::launch::async, [&buffer, &completion, new_socket](){
+				core::Text response = completion(buffer);
+				::send(new_socket, response.c_string(), response.size(), 0);
+				::close(new_socket);
+			});
+			//		printf("%s\n", );
+			
 		}
-		valread = read(new_socket, buffer, 1024);
-		printf("%s\n", buffer);
-		send(new_socket, hello, strlen(hello), 0);
-		printf("Hello message sent\n");
-	   
-		::close(new_socket);
-		::shutdown(server_fd, SHUT_RDWR);
+		
+//		::shutdown(server_fd, SHUT_RDWR);
 	}
 
 	void WebServer::shutdown(){}
