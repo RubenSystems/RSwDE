@@ -9,8 +9,8 @@
 #define Header_hpp
 
 #include <stdio.h>
-#include "../core/Array.h"
-#include "../core/Text.h"
+#include "../RSCore/Array.h"
+#include "../RSCore/Text.h"
 #include "Generatable.h"
 
 #include <string>

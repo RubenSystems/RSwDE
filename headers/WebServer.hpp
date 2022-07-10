@@ -9,7 +9,7 @@
 #define WebServer_hpp
 
 #include <stdio.h>
-#include "../core/Text.h"
+#include "../RSCore/Text.h"
 
 namespace rswde {
 	class WebServer {
